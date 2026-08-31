@@ -1,8 +1,46 @@
 {
-  "name": "virogit",
+  "name": "@vironautics/virogit",
   "version": "0.1.0",
   "description": "Switch between GitHub accounts globally: git identity, SSH key, and gh CLI auth",
   "type": "module",
+  "license": "AGPL-3.0-only",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Vironautics Group",
+  "homepage": "https://github.com/vironauticsgroup/virogit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vironauticsgroup/virogit.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/vironauticsgroup/virogit/issues"
+  },
+  "keywords": [
+    "github",
+    "git",
+    "ssh",
+    "ssh-key",
+    "ssh-agent",
+    "cli",
+    "gh",
+    "gh-cli",
+    "account-switcher",
+    "multi-account",
+    "multiple-accounts",
+    "git-config",
+    "git-identity",
+    "git-switcher",
+    "git-profiles",
+    "git-account",
+    "git-user",
+    "profile-switcher",
+    "identity-management",
+    "work-personal",
+    "devtools",
+    "developer-tools"
+  ],
   "bin": {
     "virogit": "dist/index.js"
   },
@@ -11,6 +49,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js"
   },
