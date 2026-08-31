@@ -1,0 +1,28 @@
+# Dependencies (cli/node_modules, vscode-ext/node_modules, ...)
+node_modules/
+
+# Build output — cli compiles to dist/, VS Code extensions conventionally to out/ or dist/
+dist/
+out/
+*.tsbuildinfo
+
+# Packaged VS Code extension
+*.vsix
+
+# VS Code extension test runner cache
+.vscode-test/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env / secrets
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor swap files
+*.swp
