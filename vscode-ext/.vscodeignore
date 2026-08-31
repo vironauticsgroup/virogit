@@ -1,0 +1,5 @@
+.git/**
+.gitignore
+virogit-*.vsix
+scripts/**
+**/*.map

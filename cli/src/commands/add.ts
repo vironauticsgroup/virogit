@@ -12,6 +12,7 @@ import {
   refreshPublicKeyScope,
   webLogin,
 } from "../lib/gh.js";
+import { expandHome as resolveHome } from "../lib/path.js";
 import { findLocalKeysMatchingRemote, generateSshKey } from "../lib/ssh.js";
 
 export interface AddOptions {
@@ -20,12 +21,6 @@ export interface AddOptions {
   sshKey?: string;
   githubUsername?: string;
   web?: boolean;
-}
-
-function resolveHome(path: string): string {
-  return path.startsWith("~")
-    ? path.replace("~", process.env.HOME ?? process.env.USERPROFILE ?? "~")
-    : path;
 }
 
 function onCancel(): never {

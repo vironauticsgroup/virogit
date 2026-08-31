@@ -1,20 +1,12 @@
-import { homedir } from "node:os";
 import { getProfile, setActiveProfileName } from "../config.js";
 import { setGlobalGitIdentity } from "../lib/git.js";
+import { expandHome } from "../lib/path.js";
 import { loadSshKey } from "../lib/ssh.js";
 import { switchGhAccount } from "../lib/gh.js";
 
 export interface SwitchOptions {
   ssh: boolean;
   gh: boolean;
-}
-
-function expandHome(path: string): string {
-  if (path === "~") return homedir();
-  if (path.startsWith("~/") || path.startsWith("~\\")) {
-    return homedir() + path.slice(1);
-  }
-  return path;
 }
 
 export async function switchCommand(name: string, options: SwitchOptions): Promise<void> {

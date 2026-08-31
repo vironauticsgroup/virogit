@@ -1,10 +1,12 @@
-import { run, runInteractive } from "./exec.js";
+import { run } from "./exec.js";
+import { runInteractive } from "./exec.js";
+import { createGhLib, isMissingPublicKeyScopeError, type GhProfile } from "../shared/gh.js";
 
-export interface GhProfile {
-  login: string;
-  name: string | null;
-  email: string | null;
-}
+export type { GhProfile };
+export { isMissingPublicKeyScopeError };
+
+export const { getGhProfile, listRemoteSshKeys, addSshKeyToGithub, switchGhAccount, getActiveGhAccount } =
+  createGhLib(run);
 
 /**
  * Runs `gh auth login` with stdio inherited so the user sees the device
@@ -31,11 +33,6 @@ export async function webLogin(hostname = "github.com"): Promise<void> {
   }
 }
 
-/** True when a gh API error is specifically GitHub's "missing admin:public_key scope" 404. */
-export function isMissingPublicKeyScopeError(message: string): boolean {
-  return /admin:public_key/i.test(message);
-}
-
 /**
  * Interactively grants the `admin:public_key` scope to an existing gh login (opens the
  * browser again). Used as a fallback for accounts authenticated before virogit requested
@@ -49,43 +46,4 @@ export async function refreshPublicKeyScope(hostname = "github.com"): Promise<vo
   if (!ok) {
     throw new Error("Couldn't get permission to manage SSH keys on GitHub. Run the command again to retry.");
   }
-}
-
-export async function getGhProfile(): Promise<GhProfile> {
-  const result = await run("gh", ["api", "user", "--jq", "{login,name,email}"]);
-  if (!result.ok) {
-    throw new Error(`Couldn't read your GitHub profile: ${result.stderr}`);
-  }
-  return JSON.parse(result.stdout) as GhProfile;
-}
-
-/** Public keys currently attached to the authenticated GitHub account, as raw "type base64" strings. */
-export async function listRemoteSshKeys(): Promise<string[]> {
-  const result = await run("gh", ["api", "user/keys", "--jq", ".[].key"]);
-  if (!result.ok) {
-    throw new Error(`Couldn't check which SSH keys are already on your GitHub account: ${result.stderr}`);
-  }
-  if (!result.stdout) return [];
-  return result.stdout.split("\n").filter(Boolean);
-}
-
-export async function addSshKeyToGithub(pubKeyPath: string, title: string): Promise<void> {
-  const result = await run("gh", ["ssh-key", "add", pubKeyPath, "--title", title]);
-  if (!result.ok) {
-    throw new Error(`Couldn't upload the SSH key to GitHub: ${result.stderr}`);
-  }
-}
-
-export async function switchGhAccount(username: string, hostname = "github.com"): Promise<void> {
-  const result = await run("gh", ["auth", "switch", "--hostname", hostname, "--user", username]);
-  if (!result.ok) {
-    throw new Error(`Couldn't switch the gh CLI to "${username}": ${result.stderr}`);
-  }
-}
-
-export async function getActiveGhAccount(hostname = "github.com"): Promise<string | null> {
-  const result = await run("gh", ["auth", "status", "--hostname", hostname]);
-  const text = `${result.stdout}\n${result.stderr}`;
-  const match = text.match(/Logged in to [^\s]+ account (\S+)/);
-  return match ? match[1] : null;
 }

@@ -9,6 +9,11 @@ out/
 # Packaged VS Code extension
 *.vsix
 
+# Generated copies of shared/ used by build steps (see cli/scripts/sync-shared.cjs and
+# vscode-ext/scripts/copy-shared.js) — cli/dist/shared/ is already covered by dist/ above
+cli/src/shared/
+vscode-ext/lib/core/bundled/
+
 # VS Code extension test runner cache
 .vscode-test/
 

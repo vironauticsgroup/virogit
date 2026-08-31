@@ -1,0 +1,82 @@
+{
+  "name": "virogit",
+  "displayName": "virogit",
+  "description": "Switch between GitHub accounts from a sidebar panel: git identity + SSH key. Shares profiles with the virogit CLI (~/.virogit/config.json).",
+  "version": "0.1.0",
+  "publisher": "vironautics",
+  "license": "AGPL-3.0-only",
+  "homepage": "https://github.com/vironauticsgroup/virogit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vironauticsgroup/virogit.git",
+    "directory": "vscode-ext"
+  },
+  "bugs": {
+    "url": "https://github.com/vironauticsgroup/virogit/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "SCM Providers"
+  ],
+  "keywords": [
+    "github",
+    "git",
+    "ssh",
+    "account-switcher",
+    "multi-account",
+    "git-identity"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "scripts": {
+    "vscode:prepublish": "node ./scripts/copy-shared.js",
+    "build:core": "node ./scripts/copy-shared.js"
+  },
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "virogit",
+          "title": "virogit",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "virogit": [
+        {
+          "id": "virogit.sidebar",
+          "name": "Profiles",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "virogit.switch",
+        "title": "virogit: Switch Profile"
+      },
+      {
+        "command": "virogit.add",
+        "title": "virogit: Add Profile"
+      },
+      {
+        "command": "virogit.addWeb",
+        "title": "virogit: Add Profile (Sign in with GitHub)"
+      },
+      {
+        "command": "virogit.remove",
+        "title": "virogit: Remove Profile"
+      },
+      {
+        "command": "virogit.current",
+        "title": "virogit: Show Current Profile"
+      }
+    ]
+  }
+}

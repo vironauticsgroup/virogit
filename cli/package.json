@@ -48,8 +48,10 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node scripts/sync-shared.cjs",
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run build",
+    "predev": "node scripts/sync-shared.cjs",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js"
   },

@@ -1,18 +1,22 @@
 import { run } from "./exec.js";
+import { createGitLib } from "../shared/git.js";
+
+export const { getGlobalConfig, setGlobalConfig } = createGitLib(run);
 
 export async function setGlobalGitIdentity(name: string, email: string): Promise<void> {
-  const nameResult = await run("git", ["config", "--global", "user.name", name]);
-  if (!nameResult.ok) {
-    throw new Error(`Couldn't set your commit name in git: ${nameResult.stderr}`);
+  try {
+    await setGlobalConfig("user.name", name);
+  } catch (error) {
+    throw new Error(`Couldn't set your commit name in git: ${(error as Error).message}`);
   }
-  const emailResult = await run("git", ["config", "--global", "user.email", email]);
-  if (!emailResult.ok) {
-    throw new Error(`Couldn't set your commit email in git: ${emailResult.stderr}`);
+  try {
+    await setGlobalConfig("user.email", email);
+  } catch (error) {
+    throw new Error(`Couldn't set your commit email in git: ${(error as Error).message}`);
   }
 }
 
 export async function getGlobalGitIdentity(): Promise<{ name: string; email: string }> {
-  const name = await run("git", ["config", "--global", "user.name"]);
-  const email = await run("git", ["config", "--global", "user.email"]);
-  return { name: name.stdout, email: email.stdout };
+  const [name, email] = await Promise.all([getGlobalConfig("user.name"), getGlobalConfig("user.email")]);
+  return { name: name ?? "", email: email ?? "" };
 }

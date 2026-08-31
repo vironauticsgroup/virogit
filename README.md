@@ -12,10 +12,10 @@ You save each GitHub account as a named **profile** once, then switch between pr
 
 | Part | Status | What it is |
 |---|---|---|
-| [`cli/`](cli/README.md) | ✅ Working | A command-line tool: `virogit add`, `virogit switch`, `virogit list`, etc. Use this today. |
-| [`vscode-ext/`](vscode-ext/README.md) | 🚧 Planned, not built yet | A VS Code extension that will let you switch profiles from a status bar menu instead of a terminal, using the same profiles the CLI saves. |
+| [`cli/`](cli/README.md) | ✅ Working | A command-line tool: `virogit add`, `virogit switch`, `virogit list`, etc. |
+| [`vscode-ext/`](vscode-ext/README.md) | ✅ Working | A VS Code extension: switch profiles from a status bar click, using the same profiles the CLI saves (`~/.virogit/config.json`). Switches git identity, SSH key, and the `gh` CLI account — same three steps as the CLI. |
 
-Start with the CLI — see [`cli/README.md`](cli/README.md) for install steps and every command.
+See [`cli/README.md`](cli/README.md) or [`vscode-ext/README.md`](vscode-ext/README.md) for install steps and every command.
 
 ## Example
 
