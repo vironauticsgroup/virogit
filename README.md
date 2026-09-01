@@ -17,6 +17,17 @@ You save each GitHub account as a named **profile** once, then switch between pr
 
 See [`cli/README.md`](cli/README.md) or [`vscode-ext/README.md`](vscode-ext/README.md) for install steps and every command.
 
+## Known limitations
+
+Switching profiles also clears the cached GitHub HTTPS credential (Windows Credential Manager / macOS Keychain / libsecret) whenever the GitHub username actually changes, so `git push`/`git pull` over HTTPS don't silently keep using the account you just switched away from. A few things this doesn't cover:
+
+- **Only tracks accounts changed through virogit.** If you sign into a different GitHub account through something else on the same machine — `gh auth login` directly, GitHub Desktop, an IDE's GitHub extension — virogit has no way to know. It compares against the profile it last switched to, so it can miss a credential that changed outside of it, and the old "pushed as the wrong account" symptom can come back.
+- **Per git install, not per machine.** Windows and WSL (or any two separate git installs) each keep their own credential store. Clearing the Windows one from `virogit switch` does nothing for a WSL shell's git, and vice versa.
+- **Only targets `github.com`.** GitHub Enterprise or other hosts aren't covered.
+- **First switch after install/reset always re-prompts on push**, even if the right account happens to already be cached, since virogit has no prior state yet to compare against.
+
+Bottom line: this fixes the common case of switching accounts only through `virogit switch`/`use` on one git install. It's not a guarantee against every way GitHub credentials can get out of sync on a machine.
+
 ## Example
 
 ```bash

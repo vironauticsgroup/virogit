@@ -1,5 +1,5 @@
-import { getProfile, setActiveProfileName } from "../config.js";
-import { setGlobalGitIdentity } from "../lib/git.js";
+import { getActiveProfileName, getProfile, setActiveProfileName } from "../config.js";
+import { clearCachedCredential, setGlobalGitIdentity } from "../lib/git.js";
 import { expandHome } from "../lib/path.js";
 import { loadSshKey } from "../lib/ssh.js";
 import { switchGhAccount } from "../lib/gh.js";
@@ -18,6 +18,9 @@ export async function switchCommand(name: string, options: SwitchOptions): Promi
     process.exitCode = 1;
     return;
   }
+
+  const previousActiveName = getActiveProfileName();
+  const previousProfile = previousActiveName ? getProfile(previousActiveName) : undefined;
 
   console.log(`Switching to "${profile.name}"...`);
   console.log("");
@@ -48,6 +51,20 @@ export async function switchCommand(name: string, options: SwitchOptions): Promi
     }
   } else {
     console.log("  gh CLI account   ->  skipped (--no-gh)");
+  }
+
+  const accountChanged = !previousProfile || previousProfile.githubUsername !== profile.githubUsername;
+  if (accountChanged) {
+    try {
+      await clearCachedCredential("github.com");
+      console.log("  HTTPS credential ->  cleared");
+      console.log('                        (git will ask you to sign in again next time it talks to github.com over HTTPS,');
+      console.log(`                        so it doesn't keep using ${previousProfile?.githubUsername ?? "the previous account"})`);
+    } catch (error) {
+      console.warn(`  HTTPS credential ->  skipped: ${(error as Error).message}`);
+    }
+  } else {
+    console.log("  HTTPS credential ->  unchanged (already using this account)");
   }
 
   setActiveProfileName(profile.name);

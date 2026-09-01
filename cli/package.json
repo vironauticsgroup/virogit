@@ -1,6 +1,6 @@
 {
   "name": "@vironautics/virogit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Switch between GitHub accounts globally: git identity, SSH key, and gh CLI auth",
   "type": "module",
   "license": "AGPL-3.0-only",

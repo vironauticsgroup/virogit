@@ -100,8 +100,11 @@ What it does, in order:
 1. Sets `git config --global user.name` / `user.email`.
 2. Reloads the SSH agent with just this profile's key (`ssh-add -D` then `ssh-add <key>`) — skip with `--no-ssh`.
 3. Runs `gh auth switch` so `gh pr`, `gh issue`, etc. act as this account — skip with `--no-gh`.
+4. If the GitHub username actually changed from the profile you were last on, clears the cached `github.com` HTTPS credential (Windows Credential Manager / macOS Keychain / libsecret) so `git push`/`git pull` over HTTPS don't keep authenticating as the account you just switched away from — you'll get one fresh sign-in prompt the next time you push/pull. Switching back to an account you're already using skips this, so it costs you nothing.
 
-Steps 2 and 3 are best-effort: if `ssh-agent` isn't running or `gh` isn't installed, `switch` prints a warning for that step and continues rather than failing the whole command.
+Steps 2–4 are best-effort: if `ssh-agent`/`gh` isn't available, or the credential can't be cleared, `switch` prints a warning for that step and continues rather than failing the whole command.
+
+**Limitation:** step 4 only knows about accounts switched through virogit itself. If you sign into a different GitHub account through something else on this machine (`gh auth login` directly, GitHub Desktop, an IDE extension), virogit won't detect that, and the wrong-account-cached symptom can reappear. It also only clears the credential store for the git install you ran `virogit switch` from — a separate WSL git install, for example, keeps its own cache untouched.
 
 ### `virogit current`
 Shows which profile is active and what git is actually set to right now, and flags it if the two have drifted apart (e.g. something outside virogit changed your git config).

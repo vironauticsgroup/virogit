@@ -4,7 +4,7 @@ export interface RunResult {
   stderr: string;
 }
 
-export type RunFn = (command: string, args: string[]) => Promise<RunResult>;
+export type RunFn = (command: string, args: string[], options?: { input?: string }) => Promise<RunResult>;
 
 export interface GhProfile {
   login: string;

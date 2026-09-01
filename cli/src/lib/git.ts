@@ -1,7 +1,7 @@
 import { run } from "./exec.js";
 import { createGitLib } from "../shared/git.js";
 
-export const { getGlobalConfig, setGlobalConfig } = createGitLib(run);
+export const { getGlobalConfig, setGlobalConfig, clearCachedCredential } = createGitLib(run);
 
 export async function setGlobalGitIdentity(name: string, email: string): Promise<void> {
   try {
